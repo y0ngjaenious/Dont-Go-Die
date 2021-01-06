@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">"safe HOME"</string>
+    <string name="userStateGreen">"매우 활동적"</string>
+    <string name="userStateRed">"매우 위험한"</string>
+    <string name="userStateOrange">"위험한"</string>
+    <string name="userStateOutdoor">"외출중"</string>
+
+    <string name="userLocationStateInside">"실내"</string>
+    <string name="userLocationStateOutside">"외출"</string>
+</resources>

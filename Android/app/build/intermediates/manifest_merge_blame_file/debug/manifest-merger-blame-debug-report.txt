@@ -1,0 +1,66 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.linkkit.aiot_android_demo"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="19"
+8-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml
+10
+11    <!-- Permissions the Application Requires -->
+12    <uses-permission android:name="android.permission.WAKE_LOCK" />
+12-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:6:5-68
+12-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:6:22-65
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:7:5-79
+13-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:7:22-76
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:8:5-67
+14-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:8:22-64
+15    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+15-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:9:5-75
+15-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:9:22-72
+16
+17    <application
+17-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:11:5-28:19
+18        android:allowBackup="true"
+18-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:12:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.1.0] /Users/y0ngjae/.gradle/caches/transforms-2/files-2.1/7f6c41cc2a14c0fbaa8d0166c17dc544/core-1.1.0/AndroidManifest.xml:24:18-86
+20        android:debuggable="true"
+21        android:icon="@mipmap/ic_launcher"
+21-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:13:9-43
+22        android:label="@string/app_name"
+22-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:14:9-41
+23        android:roundIcon="@mipmap/ic_launcher_round"
+23-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:15:9-54
+24        android:supportsRtl="true"
+24-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:16:9-35
+25        android:testOnly="true"
+26        android:theme="@style/AppTheme" >
+26-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:17:9-40
+27        <activity android:name="com.funers.ibmiotplatform_mqtt.MainActivity" >
+27-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:18:9-24:20
+27-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:18:19-77
+28            <intent-filter>
+28-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:19:13-23:29
+29                <action android:name="android.intent.action.MAIN" />
+29-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:20:17-69
+29-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:20:25-66
+30
+31                <category android:name="android.intent.category.LAUNCHER" />
+31-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:22:17-77
+31-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:22:27-74
+32            </intent-filter>
+33        </activity>
+34        <!-- Mqtt Service -->
+35        <service android:name="org.eclipse.paho.android.service.MqttService" >
+35-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:26:9-27:19
+35-->/Users/y0ngjae/Downloads/ibmiotplatform-android-mqtt/app/src/main/AndroidManifest.xml:26:18-77
+36        </service>
+37    </application>
+38
+39</manifest>
