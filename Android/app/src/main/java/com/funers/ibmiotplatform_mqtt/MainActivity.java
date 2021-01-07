@@ -55,22 +55,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //텍스트 상자 선언
-        UserState = (TextView) findViewById(R.id.UserState);
-        UserStateTime = (TextView) findViewById(R.id.UserStateTime);
-        UserHomeTempState = (TextView) findViewById(R.id.UserHomeTempState);
-        UserHomeHumState = (TextView) findViewById(R.id.UserHomeHumState);
-        UserLocationState = (TextView) findViewById(R.id.UserLocationState);
+        // 텍스트 상자 선언
+        TextView UserName = (TextView) findViewById(R.id.UserName);
+        TextView UserAddress = (TextView) findViewById(R.id.UserAddress);
+        TextView UserState = (TextView) findViewById(R.id.UserState);
+        TextView UserStateTime = (TextView) findViewById(R.id.UserStateTime);
+        TextView UserHomeTempState = (TextView) findViewById(R.id.UserHomeTempState);
+        TextView UserHomeHumState = (TextView) findViewById(R.id.UserHomeHumState);
+        TextView UserLocationState = (TextView) findViewById(R.id.UserLocationState);
 
+        // 텍스트 상자 안에 들어갈 내용 지정
+        // 상태 위험일 때 : UserState.setText(getResources().getString(R.string.userStateGreen));
+        // 상태 좋을 때 : UserState.setText(getResources().getString(R.string.userStateRed));
 
-        // 텍스트 상사 안에 들어갈 내용 지
-        UserState.setText(getResources().getString(R.string.userStateGreen));
-        UserStateTime.setText("10분전");
-        UserHomeTempState.setText("25도");
-        UserHomeHumState.setText("40%");
-        UserLocationState.setText(getResources().getString(R.string.userLocationStateInside));
+        // UserState 텍스트 색상 변경
+        // 상태 위험일 때 : UserState.setTextColor(getResources().getColor(R.color.colorGreen));
+        // 상태 좋을 때 : UserState.setTextColor(getResources().getColor(R.color.colorRed));
 
-        //UserStateTime.setText("12분전");
+        UserState.setText(getResources().getString(R.string.userStateGreen)); // 유저 상태
+        UserState.setTextColor(getResources().getColor(R.color.colorGreen)); // 유저 상태 텍스트 색상
+        UserLocationState.setText(getResources().getString(R.string.userLocationStateInside)); // 유저 외출인지
+        UserName.setText("홍길동"); // 유저 이름
+        UserAddress.setText("서울특별시 강서구 마곡중앙10로 30"); // 유저 주소
+        UserStateTime.setText("10분전"); // 움직임감지 시간
+        UserHomeTempState.setText("25"); // 집 온도
+        UserHomeHumState.setText("40"); // 집 습도
+
 //
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setUserName(userName);
