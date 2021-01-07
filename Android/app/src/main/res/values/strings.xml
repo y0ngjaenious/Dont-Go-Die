@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">"safe HOME"</string>
+    <string name="app_name">"Don't Go Die"</string>
     <string name="userStateGreen">"매우 활동적"</string>
-    <string name="userStateRed">"매우 위험한"</string>
-    <string name="userStateOrange">"위험한"</string>
-    <string name="userStateOutdoor">"외출중"</string>
-
-    <string name="userLocationStateInside">"실내"</string>
-    <string name="userLocationStateOutside">"외출"</string>
+    <string name="userStateM">"움직임X"</string>
+    <string name="userStateTH">"온습도 이상"</string>
+    <string name="userStateMTH">"움직임X,온습도ㅜ"</string>
+    <string name="userLocationStateInside">"실내에 있는 중"</string>
+    <string name="userLocationStateOutside">"외출 중"</string>
 </resources>
+
