@@ -99,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
         mqttConnectOptions.setUserName(userName);
         mqttConnectOptions.setPassword(passWord.toCharArray());
         System.out.println("data: ");
+
+
+        // 전화걸기 버튼
+        Button CallButton = (Button) findViewById(R.id.buttonCalling);
+        CallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:12345"));
+                //Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:12345"));
+                startActivity(intent);
+            }
+        });
 //
 //
 //
