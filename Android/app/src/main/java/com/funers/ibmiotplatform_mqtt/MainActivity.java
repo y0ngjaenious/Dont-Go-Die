@@ -9,6 +9,8 @@ import java.text.DecimalFormat;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     //final private String PUB_COMMAND_OPEN   = "iot-2/type/Raspberry_Pi/id/kyong_pi/cmd/open/fmt/json";
     //final private String PUB_COMMAND_CLOSE  = "iot-2/type/Raspberry_Pi/id/kyong_pi/cmd/close/fmt/json";
-    final private String SUB_EVENT_US       = "iot-2/type/Raspberry_Pi/id/kyong_pi/evt/us_dist/fmt/json";
+    final private String SUB_EVENT_US       = "iot-2/type/Raspberry_Pi/id/kyong_pi/evt/danger_signal/fmt/json";
     //final private String SUB_EVENT_SS       = "iot-2/type/Raspberry_Pi/id/Raspberry_Pi_1/evt/us_dist/fmt/json";
 //
 
@@ -62,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
     protected TextView UserHomeTempState;
     protected TextView UserHomeHumState;
     protected TextView UserLocationState;
-//    protected SimpleAdapter adapter;
+    protected TextView StateText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         UserHomeTempState = (TextView) findViewById(R.id.UserHomeTempState);
         UserHomeHumState = (TextView) findViewById(R.id.UserHomeHumState);
         UserLocationState = (TextView) findViewById(R.id.UserLocationState);
-
+        StateText = (TextView) findViewById(R.id.textView7);
         // 텍스트 상자 안에 들어갈 내용 지정
         // 상태 위험일 때 : UserState.setText(getResources().getString(R.string.userStateGreen));
         // 상태 좋을 때 : UserState.setText(getResources().getString(R.string.userStateRed));
@@ -133,19 +136,48 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "topic: " + topic + ", data: " + data.toString());
                 //adapter.addLog("topic: " + topic + ", data: " + data.toString());
                 System.out.println("data: " + data.toString());
+
+                UserHomeTempState.setText(Integer.toString(data.getInt("Temperature")));
+                UserHomeHumState.setText(Integer.toString(data.getInt("Humidity")));
+
                 if (data.getString("IO").equals("Outdoor")) {
                     UserLocationState.setText(getResources().getString(R.string.userLocationStateOutside));
+                    UserState.setText("외출 중");
                 } else {
+                    UserLocationState.setText(getResources().getString(R.string.userLocationStateInside));
                     double time = data.getDouble("Time");
-                    if (time > 10) {
-                        UserState.setText(getResources().getString(R.string.userStateRed));
-                        time = Math.round(time*100)/100.0;
-                        UserStateTime.setText(Double.toString(time) + "분전");
-                        showNoti();
-                    } else {
-                        UserState.setText(getResources().getString(R.string.userStateGreen));
-                        time = Math.round(time*100)/100.0;
-                        UserStateTime.setText(Double.toString(time) + "분전");
+                    time = Math.round(time*100)/100.0;
+                    switch(data.getInt("Danger_code")){
+                        case 0:
+                            UserState.setTextColor(getResources().getColor(R.color.colorGreen));
+                            UserState.setText(getResources().getString(R.string.userStateGreen));
+                            UserStateTime.setText("");
+                            StateText.setText("");
+                            break;
+
+                        case 1:
+                            UserState.setTextColor(getResources().getColor(R.color.colorRed));
+                            UserState.setText(getResources().getString(R.string.userStateM));
+                            StateText.setText("가장 마지막 움직임이 감지되었습니다.");
+                            UserStateTime.setText(Double.toString(time) + "분전");
+                            showNoti("움직임이 " + Double.toString(time) + "분간 감지되지 않았습니다.");
+                            break;
+
+                        case 2:
+                            UserState.setTextColor(getResources().getColor(R.color.colorRed));
+                            UserState.setText(getResources().getString(R.string.userStateTH));
+                            UserStateTime.setText("");
+                            StateText.setText("");
+                            showNoti("온습도에 이상이 있습니다.");
+                            break;
+
+                        case 3:
+                            UserState.setTextColor(getResources().getColor(R.color.colorRed));
+                            UserState.setText(getResources().getString(R.string.userStateMTH));
+                            StateText.setText("가장 마지막 움직임이 감지되었습니다.");
+                            UserStateTime.setText(Double.toString(time) + "분전");
+                            showNoti("움직임이 " + Double.toString(time) + "분간 감지되지 않고, 온습도에 이상이 있습니다.");
+                            break;
                     }
                 }
 
@@ -183,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showNoti(){
+    public void showNoti(String msg){
         builder = null;
         notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // 버전 오레오 이상일 경우
@@ -200,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setContentTitle("위험!");
 
         //알림창 메시지
-        builder.setContentText("10분 이상 동작이 감지되지 않았습니다.");
+        builder.setContentText(msg);
 
         //알림창 아이콘
         builder.setSmallIcon(R.drawable.noti_icon);
