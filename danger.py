@@ -12,6 +12,8 @@ appConfig = {
 
 safeTime = time.time()
 
+###
+
 
 def myEventCallback(event):
     global safeTime, temp
