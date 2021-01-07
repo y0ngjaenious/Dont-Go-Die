@@ -1,9 +1,15 @@
 package com.funers.ibmiotplatform_mqtt;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.core.app.NotificationCompat;
+//import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.text.DecimalFormat;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
     final private String SUB_EVENT_US       = "iot-2/type/Raspberry_Pi/id/kyong_pi/evt/us_dist/fmt/json";
     //final private String SUB_EVENT_SS       = "iot-2/type/Raspberry_Pi/id/Raspberry_Pi_1/evt/us_dist/fmt/json";
 //
+
+    NotificationManager notiManager;
+    NotificationCompat.Builder builder;
+
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANEL_NAME = "Channel1";
+
     protected MqttAndroidClient mqttAndroidClient;
 
     protected Button openButton;
@@ -58,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
         // 텍스트 상자 선언
         TextView UserName = (TextView) findViewById(R.id.UserName);
         TextView UserAddress = (TextView) findViewById(R.id.UserAddress);
-        TextView UserState = (TextView) findViewById(R.id.UserState);
-        TextView UserStateTime = (TextView) findViewById(R.id.UserStateTime);
-        TextView UserHomeTempState = (TextView) findViewById(R.id.UserHomeTempState);
-        TextView UserHomeHumState = (TextView) findViewById(R.id.UserHomeHumState);
-        TextView UserLocationState = (TextView) findViewById(R.id.UserLocationState);
+        UserState = (TextView) findViewById(R.id.UserState);
+        UserStateTime = (TextView) findViewById(R.id.UserStateTime);
+        UserHomeTempState = (TextView) findViewById(R.id.UserHomeTempState);
+        UserHomeHumState = (TextView) findViewById(R.id.UserHomeHumState);
+        UserLocationState = (TextView) findViewById(R.id.UserLocationState);
 
         // 텍스트 상자 안에 들어갈 내용 지정
         // 상태 위험일 때 : UserState.setText(getResources().getString(R.string.userStateGreen));
@@ -114,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         UserState.setText(getResources().getString(R.string.userStateRed));
                         time = Math.round(time*100)/100.0;
                         UserStateTime.setText(Double.toString(time) + "분전");
+                        showNoti();
                     } else {
                         UserState.setText(getResources().getString(R.string.userStateGreen));
                         time = Math.round(time*100)/100.0;
@@ -154,6 +168,35 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void showNoti(){
+        builder = null;
+        notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // 버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ((NotificationManager) notiManager).createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_DEFAULT));
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        } else {
+            //버전 오레오 이하
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        //알림창 제목
+        builder.setContentTitle("위험!");
+
+        //알림창 메시지
+        builder.setContentText("10분 이상 동작이 감지되지 않았습니다.");
+
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.noti_icon);
+
+        Notification notification = builder.build();
+
+        //알림창 실행
+        notiManager.notify(1,notification);
+    }
+
 //
 //        ////////////////////////////////////////////////////////////////////////////////////////////
 //        //MainActivity의 View 동작설정
