@@ -2,6 +2,8 @@ import wiotp.sdk.application
 import wiotp.sdk.application as app
 import json
 import time
+import datetime
+
 
 appConfig = {
     "auth": {
@@ -13,8 +15,22 @@ appConfig = {
 safeTime = time.time()
 
 
+def temp_danger(season, temp):
+    if season == "summer" and temp >= 33:
+        return True
+    elif season == "winter" and temp not in range(16, 26):
+        return True
+    return False
+
+
+def humid_danger(humid):
+    if humid not in range(10, 65):
+        return True
+    return False
+
+
 def myEventCallback(event):
-    global safeTime, in_out_status
+    global safeTime, in_out_status, season
     str = "%s event '%s' received from device [%s]: %s"
     data = event.data
 
@@ -27,11 +43,11 @@ def myEventCallback(event):
 
     if data["IO"] == "Indoor":
         in_out_status = True
-        if data["Distance"] < 20:
+        if data["Distance"] < 1:
             safeTime = time.time()
 
         # 움직임x, 온도, 습도 문제
-        elif time.time()-safeTime > 10 and pub["Temperature"] not in range(17, 26) and pub["Humidity"] >= 50:
+        elif time.time()-safeTime > 10 and temp_danger(season, pub["Temperature"]) and humid_danger(pub["Humidity"]):
             dm_time = time.time() - safeTime
 
             pub["Time"] = dm_time
@@ -40,7 +56,7 @@ def myEventCallback(event):
                                     eventId="danger_signal", msgFormat="json", data=pub, qos=0, onPublish=None)
 
             print(pub)
-        elif pub["Temperature"] not in range(17, 26) and pub["Humidity"] >= 50:
+        elif temp_danger(season, pub["Temperature"]) and humid_danger(pub["Humidity"]):
             dm_time = time.time() - safeTime
 
             pub["Time"] = dm_time
@@ -66,11 +82,16 @@ def myEventCallback(event):
                                     eventId="danger_signal", msgFormat="json", data=pub, qos=0, onPublish=None)
             in_out_status = False
 
-    # print(str % (event.format, event.eventId,
-    #             event.device, json.dumps(event.data)))
-
 
 in_out_status = True
+month = datetime.datetime.now().month
+if 6 <= month <= 9:
+    season = "summer"
+elif month in [1, 2, 12]:
+    season = "winter"
+else:
+    season = "other"
+
 app_client = app.ApplicationClient(config=appConfig)
 app_client.connect()
 app_client.deviceEventCallback = myEventCallback
