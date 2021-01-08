@@ -23,8 +23,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Android/app/src/main/java/com/funers/ibmiotplatform_mqtt/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/app/src/main/java/com/funers/ibmiotplatform_mqtt/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/app/src/main/res/values/colors.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,14 +75,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2296" y="89" key="#Inspections" timestamp="1610002156585">
+    <state x="2296" y="89" key="#Inspections" timestamp="1610087512879">
       <screen x="1440" y="-102" width="1920" height="1006" />
     </state>
-    <state x="2296" y="89" key="#Inspections/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610002156585" />
-    <state x="2065" y="1" width="1195" height="806" key="AVDManager" timestamp="1610083410505">
+    <state x="2296" y="89" key="#Inspections/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610087512879" />
+    <state x="1908" y="30" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610089462173">
       <screen x="1440" y="-102" width="1920" height="1006" />
     </state>
-    <state x="2065" y="1" width="1195" height="806" key="AVDManager/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610083410505" />
+    <state x="1908" y="30" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610089462173" />
+    <state x="2065" y="1" width="1195" height="806" key="AVDManager" timestamp="1610087706378">
+      <screen x="1440" y="-102" width="1920" height="1006" />
+    </state>
+    <state x="2065" y="1" width="1195" height="806" key="AVDManager/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610087706378" />
+    <state x="2037" y="148" key="IDE.errors.dialog" timestamp="1610087595537">
+      <screen x="1440" y="-102" width="1920" height="1006" />
+    </state>
+    <state x="2037" y="148" key="IDE.errors.dialog/0.23.1440.877/1440.-102.1920.1006@1440.-102.1920.1006" timestamp="1610087595537" />
     <state x="2214" y="181" key="run.anything.popup" timestamp="1610002202411">
       <screen x="1440" y="-102" width="1920" height="1006" />
     </state>

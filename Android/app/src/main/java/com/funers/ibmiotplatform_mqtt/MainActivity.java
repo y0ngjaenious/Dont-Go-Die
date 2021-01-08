@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 문자 보내기 권한 요청
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS}, SINGLE_PERMISSION);
+        } else {
+
+        }
 
         // 텍스트 상자 선언
         TextView UserName = (TextView) findViewById(R.id.UserName);
@@ -117,38 +125,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final String phoneNumber = "5556";
+        final String phoneNumber = "5554";
         final String message = "위험하다!";
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // 문자보내기
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // 문자보내기 버튼
+        // 문자보내기 버튼 --> 지금은 그냥 임의로 만들어 놓은 것. 위험 상황마다 보내는거 해결되면 없앨 코드.
         Button TextButton = (Button) findViewById(R.id.buttonText);
         TextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendSMS(phoneNumber, message);
-                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
             }
 
             private void sendSMS(String phoneNumber, String message) {
-//                String SENT = "SMS_SENT";
-//                String DELIVERED="SMS_DELIVERED";
-//
+                String SENT = "SMS_SENT";
+                String DELIVERED="SMS_DELIVERED";
+
 //                PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
 //                PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
-//
-//                registerReceiver(new BroadcastReceiver() {
-//                    @Override
-//                    public void onReceive(Context arg0, Intent arg1) {
-//                        switch (getResultCode()) {
-//
-//                            case Activity.RESULT_OK:
-//                                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
-//                                break;
-//                        }
-//                    }
-//                }, new IntentFilter(SENT));
+
+                registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context arg0, Intent arg1) {
+                        switch (getResultCode()) {
+
+                            case Activity.RESULT_OK:
+                                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                }, new IntentFilter(SENT));
 
                 SmsManager sms = SmsManager.getDefault();
                 sms.sendTextMessage(phoneNumber, null, message, null, null);
@@ -166,6 +175,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.i(TAG, "connection lost");
+            }
+            @Override
+            private void sendSMS(String phoneNumber, String message) {
+                String SENT = "SMS_SENT";
+                String DELIVERED="SMS_DELIVERED";
+
+//                PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
+//                PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
+
+                registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context arg0, Intent arg1) {
+                        switch (getResultCode()) {
+
+                            case Activity.RESULT_OK:
+                                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                }, new IntentFilter(SENT));
+
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(phoneNumber, null, message, null, null);
             }
 
             @Override
@@ -215,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                             StateText.setText("가장 마지막 움직임이 감지되었습니다.");
                             UserStateTime.setText(Double.toString(time) + "분전");
                             showNoti("움직임이 " + Double.toString(time) + "분간 감지되지 않고, 온습도에 이상이 있습니다.");
+                            sendSMS(phoneNumber, message);
                             break;
                     }
                 }
