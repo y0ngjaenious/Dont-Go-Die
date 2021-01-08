@@ -238,11 +238,21 @@
 
         <Button
             android:id="@+id/buttonCalling"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:text="전화걸기"
             android:background="@color/colorDarkGray"
             app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/buttonText"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorDarkGray"
+            android:text="문자하기"
+            app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteY="0dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
