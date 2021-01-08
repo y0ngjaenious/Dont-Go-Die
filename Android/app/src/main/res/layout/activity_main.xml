@@ -141,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="회원님은 현재,"
+            android:text="회원님의 현재 상태"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -160,20 +160,11 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/test4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="입니다."
-            android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="@+id/UserState"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
             android:id="@+id/UserStateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="10분전,"
+            android:text="10분전"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/UserState" />
@@ -183,9 +174,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="가장 마지막 움직임이 감지되었습니다."
+            android:text=", 가장 마지막 움직임이 감지되었습니다."
             android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/UserStateTime"
             app:layout_constraintTop_toBottomOf="@+id/UserState" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -214,7 +205,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="실내에 있는 중"
+            android:text="실내"
             android:textSize="36dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -225,10 +216,10 @@
             android:id="@+id/test7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="입니다."
+            android:text="  에 있습니다."
             android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="@+id/UserLocationState"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/UserLocationState"
+            app:layout_constraintBottom_toBottomOf="@+id/UserLocationState" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

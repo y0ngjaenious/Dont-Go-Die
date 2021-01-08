@@ -1,22 +1,32 @@
 package com.funers.ibmiotplatform_mqtt;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-//import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.text.DecimalFormat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,11 +50,7 @@ public class MainActivity extends AppCompatActivity {
     final private String userName = "a-ymmd2u-aov7srgf6g";    //API key
     final private String passWord = "y7P0bwvO+Hhlef8Qwa";     //token
 
-    //final private String PUB_COMMAND_OPEN   = "iot-2/type/Raspberry_Pi/id/kyong_pi/cmd/open/fmt/json";
-    //final private String PUB_COMMAND_CLOSE  = "iot-2/type/Raspberry_Pi/id/kyong_pi/cmd/close/fmt/json";
     final private String SUB_EVENT_US       = "iot-2/type/Raspberry_Pi/id/kyong_pi/evt/danger_signal/fmt/json";
-    //final private String SUB_EVENT_SS       = "iot-2/type/Raspberry_Pi/id/Raspberry_Pi_1/evt/us_dist/fmt/json";
-//
 
     NotificationManager notiManager;
     NotificationCompat.Builder builder;
@@ -54,17 +60,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected MqttAndroidClient mqttAndroidClient;
 
-    protected Button openButton;
-    protected Button closeButton;
-    protected RecyclerView event_log_view;
-    protected RecyclerView.LayoutManager manager;
-
     protected TextView UserState;
     protected TextView UserStateTime;
     protected TextView UserHomeTempState;
     protected TextView UserHomeHumState;
     protected TextView UserLocationState;
     protected TextView StateText;
+
+    private static final int SINGLE_PERMISSION = 1004;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         UserHomeTempState.setText("25"); // 집 온도
         UserHomeHumState.setText("40"); // 집 습도
 
-//
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setUserName(userName);
         mqttConnectOptions.setPassword(passWord.toCharArray());
@@ -120,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:12345"));
-                //Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:12345"));
                 startActivity(intent);
             }
         });
@@ -163,20 +164,17 @@ public class MainActivity extends AppCompatActivity {
                 sms.sendTextMessage(phoneNumber, null, message, null, null);
             }
         });
-//
-//
-//
-//
-//        ////////////////////////////////////////////////////////////////////////////////////////////
-//        //mqtt client를 생성 및 callBack 함수 작성
-//        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //mqtt client를 생성 및 callBack 함수 작성
+        ////////////////////////////////////////////////////////////////////////////////////////////
         mqttAndroidClient = new MqttAndroidClient(getApplicationContext(), url, clientId);
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.i(TAG, "connection lost");
             }
-            @Override
+
             private void sendSMS(String phoneNumber, String message) {
                 String SENT = "SMS_SENT";
                 String DELIVERED="SMS_DELIVERED";
@@ -216,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     UserLocationState.setText(getResources().getString(R.string.userLocationStateInside));
                     double time = data.getDouble("Time");
-                    time = Math.round(time*100)/100.0;
+                    time = Math.round(time*100)/100;
                     switch(data.getInt("Danger_code")){
                         case 0:
                             UserState.setTextColor(getResources().getColor(R.color.colorGreen));
@@ -228,9 +226,9 @@ public class MainActivity extends AppCompatActivity {
                         case 1:
                             UserState.setTextColor(getResources().getColor(R.color.colorRed));
                             UserState.setText(getResources().getString(R.string.userStateM));
-                            StateText.setText("가장 마지막 움직임이 감지되었습니다.");
-                            UserStateTime.setText(Double.toString(time) + "분전");
-                            showNoti("움직임이 " + Double.toString(time) + "분간 감지되지 않았습니다.");
+                            StateText.setText(", 가장 마지막 움직임이 감지되었습니다.");
+                            UserStateTime.setText(getTimeString(time) + "전");
+                            showNoti("움직임이 " + getTimeString(time) + "간 감지되지 않았습니다.");
                             break;
 
                         case 2:
@@ -244,18 +242,12 @@ public class MainActivity extends AppCompatActivity {
                         case 3:
                             UserState.setTextColor(getResources().getColor(R.color.colorRed));
                             UserState.setText(getResources().getString(R.string.userStateMTH));
-                            StateText.setText("가장 마지막 움직임이 감지되었습니다.");
-                            UserStateTime.setText(Double.toString(time) + "분전");
-                            showNoti("움직임이 " + Double.toString(time) + "분간 감지되지 않고, 온습도에 이상이 있습니다.");
-                            sendSMS(phoneNumber, message);
+                            StateText.setText(", 가장 마지막 움직임이 감지되었습니다.");
+                            UserStateTime.setText(getTimeString(time) + "전");
+                            showNoti("움직임이 " + getTimeString(time) + "간 감지되지 않고, 온습도에 이상이 있습니다.");
                             break;
                     }
                 }
-
-
-                //if(topic.contains("us_dist")) {
-                //    publishCommandMoveServo(data);
-                //}
             }
 
             @Override
@@ -263,9 +255,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "msg delivered");
             }
         });
-//        ////////////////////////////////////////////////////////////////////////////////////////////
-//        //mqtt client로 ibm_iot_platform에 접속
-//        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //mqtt client로 ibm_iot_platform에 접속
+        ////////////////////////////////////////////////////////////////////////////////////////////
         try {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
@@ -286,7 +278,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showNoti(String msg){
+    private String getTimeString(Double time) {
+        String res = "";
+        Long hour = Math.round(time / 3600);
+        Long minute = Math.round((time - hour * 60) / 60);
+        Long seconds = Math.round(time - hour * 60 - minute * 60);
+        if(hour > 0) {
+            res = hour.toString() + "시간";
+        }
+        else if(minute > 0) {
+            res += minute.toString() + "분";
+        }
+        else {
+            res += seconds.toString() + "초";
+        }
+        return res;
+    }
+
+    private void showNoti(String msg){
         builder = null;
         notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // 버전 오레오 이상일 경우
@@ -314,49 +323,9 @@ public class MainActivity extends AppCompatActivity {
         notiManager.notify(1,notification);
     }
 
-//
-//        ////////////////////////////////////////////////////////////////////////////////////////////
-//        //MainActivity의 View 동작설정
-//        ////////////////////////////////////////////////////////////////////////////////////////////
-//        event_log_view = (RecyclerView) findViewById(R.id.event_log_view);
-//        adapter = new SimpleAdapter();
-//        manager = new LinearLayoutManager(this);
-//        event_log_view.setLayoutManager(manager);
-//        event_log_view.setAdapter(adapter);
-//
-//        //button을 누르면 서보모터 회전 command publish
-//        openButton = findViewById(R.id.open);
-//        openButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                JSONObject command = new JSONObject();
-//                try {
-//                    command.put("duty", 12);
-//                    publishMessage(PUB_COMMAND_OPEN, command);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
-//        //button을 누르면 서보모터 회전 command publish
-//        closeButton = findViewById(R.id.close);
-//        closeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                JSONObject command = new JSONObject();
-//                try {
-//                    command.put("duty", 2);
-//                    publishMessage(PUB_COMMAND_CLOSE, command);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
-//    ////////////////////////////////////////////////////////////////////////////////////////////
-//    //evnet subscribe
-//    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //evnet subscribe
+    ////////////////////////////////////////////////////////////////////////////////////////////
     public void subscribeTopic(String topic) {
         try {
             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
@@ -373,48 +342,4 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-//    ////////////////////////////////////////////////////////////////////////////////////////////
-//    //publish command
-//    ////////////////////////////////////////////////////////////////////////////////////////////
-//    public void publishMessage(String Topic, JSONObject data) {
-//        try {
-//            if (mqttAndroidClient.isConnected() == false) {
-//                mqttAndroidClient.connect();
-//            }
-//
-//            MqttMessage message = new MqttMessage();
-//            message.setPayload(data.toString().getBytes());
-//            message.setQos(0);
-//            mqttAndroidClient.publish(Topic, message,null, new IMqttActionListener() {
-//                @Override
-//                public void onSuccess(IMqttToken asyncActionToken) {
-//                    Log.i(TAG, "publish succeed!");
-//                }
-//
-//                @Override
-//                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-//                    Log.i(TAG, "publish failed!");
-//                }
-//            });
-//        } catch (MqttException e) {
-//            Log.e(TAG, e.toString());
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    ////////////////////////////////////////////////////////////////////////////////////////////
-//    //event를 통해 받은 값에 따라 모터를 제어하는 command publish
-//    ////////////////////////////////////////////////////////////////////////////////////////////
-//    public void publishCommandMoveServo(JSONObject data) throws JSONException {
-//        float distance = Float.parseFloat(data.getString("distance"));
-//        JSONObject command = new JSONObject();
-//        if(distance < 20){
-//            command.put("duty", 12);
-//            publishMessage(PUB_COMMAND_OPEN, command);
-//        }
-//        if(distance > 25){
-//            command.put("duty", 2);
-//            publishMessage(PUB_COMMAND_CLOSE, command);
-//        }
-//    }
-    }
+}
