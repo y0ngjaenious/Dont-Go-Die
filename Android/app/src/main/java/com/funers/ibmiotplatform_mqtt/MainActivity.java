@@ -116,6 +116,44 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        final String phoneNumber = "5556";
+        final String message = "위험하다!";
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // 문자보내기
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // 문자보내기 버튼
+        Button TextButton = (Button) findViewById(R.id.buttonText);
+        TextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendSMS(phoneNumber, message);
+                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
+            }
+
+            private void sendSMS(String phoneNumber, String message) {
+//                String SENT = "SMS_SENT";
+//                String DELIVERED="SMS_DELIVERED";
+//
+//                PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
+//                PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
+//
+//                registerReceiver(new BroadcastReceiver() {
+//                    @Override
+//                    public void onReceive(Context arg0, Intent arg1) {
+//                        switch (getResultCode()) {
+//
+//                            case Activity.RESULT_OK:
+//                                Toast.makeText(getBaseContext(), "알림 문자 전송됨.", Toast.LENGTH_SHORT).show();
+//                                break;
+//                        }
+//                    }
+//                }, new IntentFilter(SENT));
+
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(phoneNumber, null, message, null, null);
+            }
+        });
 //
 //
 //
