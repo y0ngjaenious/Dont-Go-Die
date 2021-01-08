@@ -12,14 +12,11 @@ appConfig = {
 
 safeTime = time.time()
 
-###
-
 
 def myEventCallback(event):
-    global safeTime, temp
+    global safeTime, in_out_status
     str = "%s event '%s' received from device [%s]: %s"
     data = event.data
-    outdoor = False
 
     pub = {}
 #    pub["Name"] = data["Name"]
@@ -29,8 +26,7 @@ def myEventCallback(event):
     pub["Humidity"] = data["Humidity"]
 
     if data["IO"] == "Indoor":
-        outdoor = False
-        temp = 1
+        in_out_status = True
         if data["Distance"] < 20:
             safeTime = time.time()
 
@@ -65,17 +61,16 @@ def myEventCallback(event):
             print(pub)
 
     else:
-        outdoor = True
-        if outdoor == True and temp == 1:
+        if in_out_status:
             app_client.publishEvent(typeId="Raspberry_Pi", deviceId="kyong_pi",
                                     eventId="danger_signal", msgFormat="json", data=pub, qos=0, onPublish=None)
-            temp += 1
+            in_out_status = False
 
     # print(str % (event.format, event.eventId,
     #             event.device, json.dumps(event.data)))
 
 
-temp = 1
+in_out_status = True
 app_client = app.ApplicationClient(config=appConfig)
 app_client.connect()
 app_client.deviceEventCallback = myEventCallback
